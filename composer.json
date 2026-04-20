@@ -1,0 +1,62 @@
+{
+    "name": "illuma-law/laravel-edge-clear",
+    "description": "Standalone Cloudflare cache purging for Laravel",
+    "keywords": ["laravel", "cloudflare", "cache", "purge", "cdn", "edge"],
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Illuma Law",
+            "email": "hello@illuma.law"
+        }
+    ],
+    "require": {
+        "php": "^8.5",
+        "illuminate/contracts": "^11.0|^12.0|^13.0",
+        "illuminate/http": "^11.0|^12.0|^13.0",
+        "illuminate/support": "^11.0|^12.0|^13.0",
+        "spatie/laravel-package-tools": "^1.16"
+    },
+    "require-dev": {
+        "larastan/larastan": "^3.0",
+        "laravel/pint": "^1.0",
+        "nunomaduro/collision": "^8.0",
+        "orchestra/testbench": "^9.0|^10.0",
+        "pestphp/pest": "^4.0",
+        "pestphp/pest-plugin-arch": "^4.0",
+        "pestphp/pest-plugin-laravel": "^4.0",
+        "phpstan/extension-installer": "^1.3",
+        "phpstan/phpstan-deprecation-rules": "^2.0",
+        "phpstan/phpstan-phpunit": "^2.0",
+        "spatie/laravel-ray": "^1.36"
+    },
+    "autoload": {
+        "psr-4": {
+            "IllumaLaw\\EdgeClear\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "IllumaLaw\\EdgeClear\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "IllumaLaw\\EdgeClear\\EdgeClearServiceProvider"
+            ],
+            "aliases": {
+                "CloudflarePurger": "IllumaLaw\\EdgeClear\\Facades\\CloudflarePurger"
+            }
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "phpstan/extension-installer": true
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

@@ -1,0 +1,33 @@
+name: Tests
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        php: [8.5]
+        laravel: ['11.*', '12.*', '13.*']
+
+    name: PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick, fileinfo
+          coverage: xdebug
+
+      - name: Install dependencies
+        run: |
+          composer require "illuminate/support:${{ matrix.laravel }}" "illuminate/contracts:${{ matrix.laravel }}" "illuminate/http:${{ matrix.laravel }}" --no-interaction --no-update
+          composer update --prefer-dist --no-interaction
+
+      - name: Execute tests
+        run: vendor/bin/pest --coverage --min=100
