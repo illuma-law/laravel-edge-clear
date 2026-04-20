@@ -72,4 +72,3 @@ return [
      */
     'auto_purge_fallback_codes' => [400, 403],
 ];
-

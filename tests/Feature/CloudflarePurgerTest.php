@@ -5,6 +5,7 @@ declare(strict_types=1);
 use IllumaLaw\EdgeClear\CloudflarePurger;
 use IllumaLaw\EdgeClear\Exceptions\CloudflarePurgeException;
 use IllumaLaw\EdgeClear\Facades\CloudflarePurger as CloudflarePurgerFacade;
+use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -95,7 +96,7 @@ it('purges by urls and returns result id', function (): void {
 
     expect($result)->toBe('purge-id');
 
-    Http::assertSent(function (\Illuminate\Http\Client\Request $request): bool {
+    Http::assertSent(function (Request $request): bool {
         return $request->url() === 'https://api.cloudflare.com/client/v4/zones/test-zone-id/purge_cache'
             && $request['files'] === ['https://example.com/page1', 'https://example.com/page2'];
     });
@@ -131,7 +132,7 @@ it('purges by tags and returns result id', function (): void {
 
     expect($result)->toBe('tag-purge-id');
 
-    Http::assertSent(function (\Illuminate\Http\Client\Request $request): bool {
+    Http::assertSent(function (Request $request): bool {
         return $request['tags'] === ['tag1', 'tag2'];
     });
 });
@@ -156,7 +157,7 @@ it('purges everything and returns true', function (): void {
 
     expect($result)->toBeTrue();
 
-    Http::assertSent(function (\Illuminate\Http\Client\Request $request): bool {
+    Http::assertSent(function (Request $request): bool {
         return $request['purge_everything'] === true;
     });
 });
@@ -219,7 +220,7 @@ it('sends X-Auth-Email and X-Auth-Key headers when using legacy auth', function 
 
     $purger->purgeEverything();
 
-    Http::assertSent(function (\Illuminate\Http\Client\Request $request): bool {
+    Http::assertSent(function (Request $request): bool {
         return $request->hasHeader('X-Auth-Email', 'admin@example.com')
             && $request->hasHeader('X-Auth-Key', 'my-global-key');
     });
@@ -232,7 +233,7 @@ it('sends Authorization Bearer header when using api_token', function (): void {
 
     $this->purger->purgeEverything();
 
-    Http::assertSent(function (\Illuminate\Http\Client\Request $request): bool {
+    Http::assertSent(function (Request $request): bool {
         return $request->hasHeader('Authorization', 'Bearer test-api-token');
     });
 });

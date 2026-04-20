@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use IllumaLaw\EdgeClear\CloudflarePurger;
 use IllumaLaw\EdgeClear\EdgeClearServiceProvider;
 
 it('registers the cloudflare-purger singleton', function (): void {
@@ -32,6 +31,5 @@ it('publishes the config file', function (): void {
     $publishedPaths = EdgeClearServiceProvider::pathsToPublish();
 
     expect($publishedPaths)->not->toBeEmpty();
-
 
 });

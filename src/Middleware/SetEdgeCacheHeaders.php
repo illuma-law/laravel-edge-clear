@@ -24,7 +24,7 @@ class SetEdgeCacheHeaders
         }
 
         $resolvedTtl = $this->resolveTtl($request, $ttl, $cacheProfile);
-        
+
         $this->applyCacheControlHeader($response, $resolvedTtl, $cacheProfile);
         $this->applyCacheTagsHeader($request, $response, $tags);
 
