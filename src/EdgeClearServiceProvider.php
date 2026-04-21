@@ -20,7 +20,7 @@ final class EdgeClearServiceProvider extends PackageServiceProvider
 
     public function registeringPackage(): void
     {
-        $this->app->singleton('cloudflare-purger', function (Application $app): CloudflarePurger {
+        $this->app->singleton(CloudflarePurger::class, function (Application $app): CloudflarePurger {
             /** @var Repository $configRepository */
             $configRepository = $app->make('config');
 
@@ -32,6 +32,8 @@ final class EdgeClearServiceProvider extends PackageServiceProvider
                 environment: $app->environment()
             );
         });
+
+        $this->app->alias(CloudflarePurger::class, 'cloudflare-purger');
     }
 
     /**
@@ -39,6 +41,6 @@ final class EdgeClearServiceProvider extends PackageServiceProvider
      */
     public function provides(): array
     {
-        return ['cloudflare-purger'];
+        return [CloudflarePurger::class, 'cloudflare-purger'];
     }
 }
