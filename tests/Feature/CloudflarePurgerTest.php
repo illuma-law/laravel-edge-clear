@@ -11,21 +11,19 @@ use Illuminate\Support\Facades\Log;
 
 beforeEach(function (): void {
     $this->config = [
-        'zone_id' => 'test-zone-id',
-        'api_token' => 'test-api-token',
-        'api_email' => null,
-        'api_key' => null,
-        'enabled' => true,
+        'zone_id'            => 'test-zone-id',
+        'api_token'          => 'test-api-token',
+        'api_email'          => null,
+        'api_key'            => null,
+        'enabled'            => true,
         'only_in_production' => false,
-        'debug' => false,
+        'debug'              => false,
     ];
 
     config(['edge-clear' => $this->config]);
 
     $this->purger = new CloudflarePurger($this->config, 'production');
 });
-
-// isActive() branch coverage
 
 it('is active when fully configured with api_token', function (): void {
     expect($this->purger->isActive())->toBeTrue();
@@ -35,7 +33,7 @@ it('is active when configured with email and key auth', function (): void {
     $purger = new CloudflarePurger(array_merge($this->config, [
         'api_token' => null,
         'api_email' => 'test@example.com',
-        'api_key' => 'test-key',
+        'api_key'   => 'test-key',
     ]), 'production');
 
     expect($purger->isActive())->toBeTrue();
@@ -69,7 +67,7 @@ it('is inactive when api_token is null and no email auth configured', function (
     $purger = new CloudflarePurger(array_merge($this->config, [
         'api_token' => null,
         'api_email' => null,
-        'api_key' => null,
+        'api_key'   => null,
     ]), 'production');
 
     expect($purger->isActive())->toBeFalse();
@@ -79,13 +77,11 @@ it('is inactive when api_token is null and only api_email is provided without ap
     $purger = new CloudflarePurger(array_merge($this->config, [
         'api_token' => null,
         'api_email' => 'test@example.com',
-        'api_key' => null,
+        'api_key'   => null,
     ]), 'production');
 
     expect($purger->isActive())->toBeFalse();
 });
-
-// purgeByUrls() tests
 
 it('purges by urls and returns result id', function (): void {
     Http::fake([
@@ -121,8 +117,6 @@ it('returns false from purgeByUrls when purger is inactive', function (): void {
     Http::assertNothingSent();
 });
 
-// purgeByTags() tests
-
 it('purges by tags and returns result id', function (): void {
     Http::fake([
         'api.cloudflare.com/*' => Http::response(['success' => true, 'result' => ['id' => 'tag-purge-id']], 200),
@@ -145,8 +139,6 @@ it('returns false from purgeByTags when purger is inactive', function (): void {
     expect($result)->toBeFalse();
     Http::assertNothingSent();
 });
-
-// purgeEverything() tests
 
 it('purges everything and returns true', function (): void {
     Http::fake([
@@ -171,13 +163,11 @@ it('returns false from purgeEverything when purger is inactive', function (): vo
     Http::assertNothingSent();
 });
 
-// Error handling
-
 it('throws CloudflarePurgeException on failed http response with error message and code', function (): void {
     Http::fake([
         'api.cloudflare.com/*' => Http::response([
             'success' => false,
-            'errors' => [['message' => 'Invalid API token', 'code' => 1001]],
+            'errors'  => [['message' => 'Invalid API token', 'code' => 1001]],
         ], 403),
     ]);
 
@@ -205,13 +195,11 @@ it('returns false when success is false but http status is 200', function (): vo
     expect($result)->toBeFalse();
 });
 
-// Email/key authentication
-
 it('sends X-Auth-Email and X-Auth-Key headers when using legacy auth', function (): void {
     $purger = new CloudflarePurger(array_merge($this->config, [
         'api_token' => null,
         'api_email' => 'admin@example.com',
-        'api_key' => 'my-global-key',
+        'api_key'   => 'my-global-key',
     ]), 'production');
 
     Http::fake([
@@ -238,8 +226,6 @@ it('sends Authorization Bearer header when using api_token', function (): void {
     });
 });
 
-// Debug logging
-
 it('logs debug request and response when debug is enabled', function (): void {
     $purger = new CloudflarePurger(array_merge($this->config, ['debug' => true]), 'production');
 
@@ -265,8 +251,6 @@ it('does not log when debug is disabled', function (): void {
 
     $this->purger->purgeEverything();
 });
-
-// Facade
 
 it('resolves via facade and purges everything', function (): void {
     Http::fake([

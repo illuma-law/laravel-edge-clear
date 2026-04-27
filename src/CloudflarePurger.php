@@ -88,13 +88,13 @@ final readonly class CloudflarePurger
         } else {
             $request = Http::asJson()->withHeaders([
                 'X-Auth-Email' => $this->config['api_email'],
-                'X-Auth-Key' => $this->config['api_key'],
+                'X-Auth-Key'   => $this->config['api_key'],
             ]);
         }
 
         if ($this->config['debug']) {
             Log::debug('Cloudflare Purge Request', [
-                'url' => $url,
+                'url'  => $url,
                 'body' => $body,
             ]);
         }
@@ -104,7 +104,7 @@ final readonly class CloudflarePurger
         if ($this->config['debug']) {
             Log::debug('Cloudflare Purge Response', [
                 'status' => $response->status(),
-                'body' => $response->json(),
+                'body'   => $response->json(),
             ]);
         }
 
