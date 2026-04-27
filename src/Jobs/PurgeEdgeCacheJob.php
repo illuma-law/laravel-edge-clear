@@ -49,8 +49,8 @@ class PurgeEdgeCacheJob implements ShouldBeUnique, ShouldQueue
         sort($urls, SORT_STRING);
 
         $payload = [
-            'tags'   => $tags,
-            'urls'   => $urls,
+            'tags' => $tags,
+            'urls' => $urls,
             'reason' => $this->reason,
         ];
 
@@ -79,10 +79,10 @@ class PurgeEdgeCacheJob implements ShouldBeUnique, ShouldQueue
         $mode = is_string($mode) ? strtolower(trim($mode)) : 'urls';
 
         Log::info('cloudflare.purge.start', [
-            'reason'     => $this->reason,
+            'reason' => $this->reason,
             'purge_mode' => $mode,
-            'tag_count'  => count($this->tags),
-            'url_count'  => count($this->urls),
+            'tag_count' => count($this->tags),
+            'url_count' => count($this->urls),
         ]);
 
         try {
@@ -96,10 +96,10 @@ class PurgeEdgeCacheJob implements ShouldBeUnique, ShouldQueue
                 } catch (CloudflarePurgeException $e) {
                     if ($this->urls !== [] && $this->shouldAutoFallbackFromTagFailure($e)) {
                         Log::warning('cloudflare.purge.auto_tag_fallback_to_urls', [
-                            'reason'    => $this->reason,
+                            'reason' => $this->reason,
                             'exception' => $e::class,
-                            'message'   => $e->getMessage(),
-                            'status'    => $e->getCode(),
+                            'message' => $e->getMessage(),
+                            'status' => $e->getCode(),
                         ]);
                         foreach (array_chunk($this->urls, 25) as $chunk) {
                             $lastPurgeId = $cache->purgeByUrls($chunk);
@@ -181,7 +181,7 @@ class PurgeEdgeCacheJob implements ShouldBeUnique, ShouldQueue
     protected function recordSuccess(?string $purgeId): void
     {
         Log::info('cloudflare.purge.success', [
-            'reason'              => $this->reason,
+            'reason' => $this->reason,
             'cloudflare_purge_id' => $purgeId,
         ]);
     }
@@ -189,9 +189,9 @@ class PurgeEdgeCacheJob implements ShouldBeUnique, ShouldQueue
     protected function recordFailure(Throwable $e): void
     {
         Log::error('cloudflare.purge.failed', [
-            'reason'    => $this->reason,
+            'reason' => $this->reason,
             'exception' => $e::class,
-            'message'   => $e->getMessage(),
+            'message' => $e->getMessage(),
         ]);
     }
 }

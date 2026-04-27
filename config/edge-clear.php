@@ -17,7 +17,7 @@ return [
      * Legacy API authentication.
      */
     'api_email' => env('CLOUDFLARE_API_EMAIL'),
-    'api_key'   => env('CLOUDFLARE_API_KEY'),
+    'api_key' => env('CLOUDFLARE_API_KEY'),
 
     /*
      * Determine if purging is enabled.

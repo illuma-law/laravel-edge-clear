@@ -11,13 +11,13 @@ use Illuminate\Support\Facades\Log;
 
 beforeEach(function (): void {
     $this->config = [
-        'zone_id'            => 'test-zone-id',
-        'api_token'          => 'test-api-token',
-        'api_email'          => null,
-        'api_key'            => null,
-        'enabled'            => true,
+        'zone_id' => 'test-zone-id',
+        'api_token' => 'test-api-token',
+        'api_email' => null,
+        'api_key' => null,
+        'enabled' => true,
         'only_in_production' => false,
-        'debug'              => false,
+        'debug' => false,
     ];
 
     config(['edge-clear' => $this->config]);
@@ -33,7 +33,7 @@ it('is active when configured with email and key auth', function (): void {
     $purger = new CloudflarePurger(array_merge($this->config, [
         'api_token' => null,
         'api_email' => 'test@example.com',
-        'api_key'   => 'test-key',
+        'api_key' => 'test-key',
     ]), 'production');
 
     expect($purger->isActive())->toBeTrue();
@@ -67,7 +67,7 @@ it('is inactive when api_token is null and no email auth configured', function (
     $purger = new CloudflarePurger(array_merge($this->config, [
         'api_token' => null,
         'api_email' => null,
-        'api_key'   => null,
+        'api_key' => null,
     ]), 'production');
 
     expect($purger->isActive())->toBeFalse();
@@ -77,7 +77,7 @@ it('is inactive when api_token is null and only api_email is provided without ap
     $purger = new CloudflarePurger(array_merge($this->config, [
         'api_token' => null,
         'api_email' => 'test@example.com',
-        'api_key'   => null,
+        'api_key' => null,
     ]), 'production');
 
     expect($purger->isActive())->toBeFalse();
@@ -167,7 +167,7 @@ it('throws CloudflarePurgeException on failed http response with error message a
     Http::fake([
         'api.cloudflare.com/*' => Http::response([
             'success' => false,
-            'errors'  => [['message' => 'Invalid API token', 'code' => 1001]],
+            'errors' => [['message' => 'Invalid API token', 'code' => 1001]],
         ], 403),
     ]);
 
@@ -199,7 +199,7 @@ it('sends X-Auth-Email and X-Auth-Key headers when using legacy auth', function 
     $purger = new CloudflarePurger(array_merge($this->config, [
         'api_token' => null,
         'api_email' => 'admin@example.com',
-        'api_key'   => 'my-global-key',
+        'api_key' => 'my-global-key',
     ]), 'production');
 
     Http::fake([
